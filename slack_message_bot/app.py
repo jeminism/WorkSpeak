@@ -1,7 +1,7 @@
 import os
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
-from slack_message_bot.llm_backend import get_backend, LLMConfig
+from slack_message_bot.llm_backend import get_backend
 from slack_message_bot.rewriter import MessageRewriter
 from slack_message_bot.config import load_llm_config
 from slack_message_bot.logging_config import get_logger
