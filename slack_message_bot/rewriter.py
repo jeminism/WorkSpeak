@@ -1,7 +1,7 @@
 import re
 import numpy as np
 from typing import Optional, Tuple
-from slack_message_bot.llm_backend import LLMCallResult, get_backend
+from .llm_backend import LLMCallResult, get_backend
 
 HAS_EMBEDDINGS = False
 embedding_model = None

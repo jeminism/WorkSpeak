@@ -17,24 +17,19 @@ Output:
 """
 
 import sys
-import os
+from pathlib import Path
 import json
 import csv
-import re
-
-# Add parent to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 try:
     import yaml
     HAS_YAML = True
 except ImportError:
     HAS_YAML = False
 
-from slack_message_bot.llm_backend import get_backend
-from slack_message_bot.rewriter import MessageRewriter
-from slack_message_bot.logging_config import get_logger, configure_logging
-from slack_message_bot.config import load_llm_config
+from .llm_backend import get_backend
+from .rewriter import MessageRewriter
+from .logging_config import get_logger, configure_logging
+from .config import load_llm_config
 
 logger = get_logger(__name__)
 
@@ -112,7 +107,7 @@ def parse_yaml_file(filepath: str) -> list:
 
 def parse_file(filepath: str) -> list:
     """Parse file based on extension."""
-    ext = os.path.splitext(filepath)[1].lower()
+    ext = Path(filepath).suffix.lower()
     
     parsers = {
         '.txt': parse_text_file,
@@ -301,8 +296,8 @@ def main():
     evaluator.print_results()
     
     # Save output
-    base_name = os.path.splitext(input_file)[0]
-    output_file = f"{base_name}_evaluated.txt"
+    output_path = Path(input_file).with_suffix("") / f"{Path(input_file).stem}_evaluated.txt"
+    output_file = f"{Path(input_file).stem}_evaluated.txt"
     
     try:
         with open(output_file, 'w', encoding='utf-8') as f:

@@ -1,12 +1,12 @@
 """Main entry point for WorkSpeak Bot."""
-import os
 import sys
 import argparse
+from pathlib import Path
 
-from slack_message_bot.app import SlackMessageBot
-from slack_message_bot.logging_config import configure_logging, get_logger
-from slack_message_bot.cli_rewriter import main as cli_rewriter_main
-from slack_message_bot.batch_evaluator import main as batch_evaluator_main
+from .app import SlackMessageBot
+from .logging_config import configure_logging, get_logger
+from .cli_rewriter import main as cli_rewriter_main
+from .batch_evaluator import main as batch_evaluator_main
 
 logger = get_logger(__name__)
 
@@ -32,10 +32,10 @@ def main():
     
     args = parser.parse_args()
     
-    log_file = os.getenv("WORKSPEAK_LOG_FILE", "logs/workSpeak.log")
+    log_file = Path("logs/workSpeak.log")
     configure_logging(
-        log_level=os.getenv("WORKSPEAK_LOG_LEVEL", "INFO"),
-        log_file=log_file
+        log_level="INFO",
+        log_file=str(log_file)
     )
     
     if args.mode == "slack":

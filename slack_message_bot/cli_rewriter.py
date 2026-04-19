@@ -13,10 +13,10 @@ import re
 # Add parent to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from slack_message_bot.llm_backend import get_backend
-from slack_message_bot.rewriter import MessageRewriter, HAS_EMBEDDINGS
-from slack_message_bot.logging_config import get_logger
-from slack_message_bot.config import load_llm_config
+from .llm_backend import get_backend
+from .rewriter import MessageRewriter, HAS_EMBEDDINGS
+from .logging_config import get_logger
+from .config import load_llm_config
 
 logger = get_logger(__name__)
 
