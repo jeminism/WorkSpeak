@@ -78,8 +78,8 @@ class MessageRewriter:
             return 0.95  # Default high score if embeddings unavailable
         
         try:
-            orig_emb = embedding_model.encode(original, convert_to_numpy=True)
-            rewrt_emb = embedding_model.encode(rewritten, convert_to_numpy=True)
+            orig_emb = embedding_model.encode(original, convert_to_numpy=True, show_progress_bar=False)
+            rewrt_emb = embedding_model.encode(rewritten, convert_to_numpy=True, show_progress_bar=False)
             similarity = np.dot(orig_emb, rewrt_emb) / (np.linalg.norm(orig_emb) * np.linalg.norm(rewrt_emb))
             return float(similarity)
         except Exception:
