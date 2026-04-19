@@ -1,0 +1,456 @@
+============================================================
+Message 1
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+This line is an informal message with lol in it.
+
+Rewritten:
+This line is an informal message with lol in it.
+
+Metrics:
+  original_length: 48
+  rewritten_length: 48
+  original_words: 10
+  rewritten_words: 10
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 2
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+Hey guys, this meeting is super important omg
+
+Rewritten:
+Hey guys, this meeting is super important omg
+
+Metrics:
+  original_length: 45
+  rewritten_length: 45
+  original_words: 8
+  rewritten_words: 8
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 3
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+Can we maybe potentially reschedule the call?
+
+Rewritten:
+Can we maybe potentially reschedule the call?
+
+Metrics:
+  original_length: 45
+  rewritten_length: 45
+  original_words: 7
+  rewritten_words: 7
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 4
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+I idk think we should do this differently tbh
+
+Rewritten:
+I idk think we should do this differently tbh
+
+Metrics:
+  original_length: 45
+  rewritten_length: 45
+  original_words: 9
+  rewritten_words: 9
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 5
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+omg this is so frustrating wtf
+
+Rewritten:
+omg this is so frustrating wtf
+
+Metrics:
+  original_length: 30
+  rewritten_length: 30
+  original_words: 6
+  rewritten_words: 6
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 6
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+{
+
+Rewritten:
+{
+
+Metrics:
+  original_length: 1
+  rewritten_length: 1
+  original_words: 1
+  rewritten_words: 1
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 7
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+"messages": [
+
+Rewritten:
+"messages": [
+
+Metrics:
+  original_length: 13
+  rewritten_length: 13
+  original_words: 2
+  rewritten_words: 2
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 8
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+"Hey team, just wanted to flag that the meeting is moved to 3pm tomorrow",
+
+Rewritten:
+"Hey team, just wanted to flag that the meeting is moved to 3pm tomorrow",
+
+Metrics:
+  original_length: 74
+  rewritten_length: 74
+  original_words: 14
+  rewritten_words: 14
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 9
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+"lol omg can someone please explain this?",
+
+Rewritten:
+"lol omg can someone please explain this?",
+
+Metrics:
+  original_length: 43
+  rewritten_length: 43
+  original_words: 7
+  rewritten_words: 7
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 10
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+"I was just wondering if maybe we could potentially consider rescheduling the call",
+
+Rewritten:
+"I was just wondering if maybe we could potentially consider rescheduling the call",
+
+Metrics:
+  original_length: 84
+  rewritten_length: 84
+  original_words: 13
+  rewritten_words: 13
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 11
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+"plz help me with this asap",
+
+Rewritten:
+"plz help me with this asap",
+
+Metrics:
+  original_length: 29
+  rewritten_length: 29
+  original_words: 6
+  rewritten_words: 6
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 12
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+"FYI the presentation deck is ready for review"
+
+Rewritten:
+"FYI the presentation deck is ready for review"
+
+Metrics:
+  original_length: 47
+  rewritten_length: 47
+  original_words: 8
+  rewritten_words: 8
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 13
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+]
+
+Rewritten:
+]
+
+Metrics:
+  original_length: 1
+  rewritten_length: 1
+  original_words: 1
+  rewritten_words: 1
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 14
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+}
+
+Rewritten:
+}
+
+Metrics:
+  original_length: 1
+  rewritten_length: 1
+  original_words: 1
+  rewritten_words: 1
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 15
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+Hey guys this is a casual message
+
+Rewritten:
+Hey guys this is a casual message
+
+Metrics:
+  original_length: 33
+  rewritten_length: 33
+  original_words: 7
+  rewritten_words: 7
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 16
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+This is more formal and professional already
+
+Rewritten:
+This is more formal and professional already
+
+Metrics:
+  original_length: 44
+  rewritten_length: 44
+  original_words: 7
+  rewritten_words: 7
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 17
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+omg lol this is so frustrating tbh
+
+Rewritten:
+omg lol this is so frustrating tbh
+
+Metrics:
+  original_length: 34
+  rewritten_length: 34
+  original_words: 7
+  rewritten_words: 7
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 18
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+WTF is going on here idk
+
+Rewritten:
+WTF is going on here idk
+
+Metrics:
+  original_length: 24
+  rewritten_length: 24
+  original_words: 6
+  rewritten_words: 6
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 19
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+Can we please discuss this in the next meeting?
+
+Rewritten:
+Can we please discuss this in the next meeting?
+
+Metrics:
+  original_length: 47
+  rewritten_length: 47
+  original_words: 9
+  rewritten_words: 9
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 20
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+- Hey this meeting moved to 3pm
+
+Rewritten:
+- Hey this meeting moved to 3pm
+
+Metrics:
+  original_length: 31
+  rewritten_length: 31
+  original_words: 7
+  rewritten_words: 7
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 21
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+- lol omg so important
+
+Rewritten:
+- lol omg so important
+
+Metrics:
+  original_length: 22
+  rewritten_length: 22
+  original_words: 5
+  rewritten_words: 5
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 22
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+- I was just wondering if maybe we could potentially reschedule
+
+Rewritten:
+- I was just wondering if maybe we could potentially reschedule
+
+Metrics:
+  original_length: 63
+  rewritten_length: 63
+  original_words: 11
+  rewritten_words: 11
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 23
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+- plz need help asap
+
+Rewritten:
+- plz need help asap
+
+Metrics:
+  original_length: 20
+  rewritten_length: 20
+  original_words: 5
+  rewritten_words: 5
+  word_ratio: 1.0
+  char_ratio: 1.0
+
+============================================================
+Message 24
+Decision: test_mode_no_llm_config
+============================================================
+
+Original:
+- Thanks in advance for looking into this
+
+Rewritten:
+- Thanks in advance for looking into this
+
+Metrics:
+  original_length: 41
+  rewritten_length: 41
+  original_words: 8
+  rewritten_words: 8
+  word_ratio: 1.0
+  char_ratio: 1.0
+
