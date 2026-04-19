@@ -1,0 +1,12 @@
+# LLM Configuration for WorkSpeak Bot
+# Priority: env vars > YAML file
+
+endpoint: "https://api.openai.com/v1/chat/completions"
+api_key: "your-api-key-here"
+model: "gpt-4o"
+provider: "openai"
+
+# Alternative providers (OpenAI-compatible):
+# Groq: https://api.groq.com/openai/v1/chat/completions
+# Together AI: https://api.together.xyz/v1/chat/completions
+# vLLM (self-hosted): https://your-vllm-endpoint/v1/chat/completions
