@@ -30,49 +30,120 @@ A Slack bot that listens for your messages and automatically rewrites them to be
 
 ### 1. Create a Slack App
 
-1. Visit [Slack API](https://api.slack.com/apps)
-2. Click "Create New App" → "From scratch"
-3. Add these OAuth scopes:
-   - `chat:write` - To edit messages
-   - `chat:write.customize` - To customize bot messages
-   - `im:read` / `im:write` - For DMs
-   - `channels:history` - To read thread context
+1. Visit [Slack API Apps Page](https://api.slack.com/apps)
+2. Click **"Create New App"** → **"From scratch"**
+3. Enter app name (e.g., "Professional Message Bot")
+4. Select your workspace
+5. Click **"Create App"**
 
-4. Install the app to your workspace
-5. Generate and copy:
-   - **Bot User OAuth Token** (starts with `xoxb-`)
-   - **Signing Secret**
-   - **App-Level Token** (starts with `xapp-`) for Socket Mode
+#### Configure OAuth & Permissions
 
-### 2. Get your User ID
+1. In the left sidebar, click **"OAuth & Permissions"**
+2. Under **"Scopes"** section, click **"Add an OAuth Scope"**
+3. Add these 5 **Bot Token Scopes** (required for message editing):
+
+| Scope | Purpose |
+|-------|---------|
+| `chat:write` | Allows the bot to edit/replace messages |
+| `chat:write.customize` | Enables "edited by bot" signature on updated messages |
+| `im:read` | Reads direct messages |
+| `im:write` | Allows bot to send DMs if needed |
+| `channels:history` | Fetches thread context for smarter rewrites |
+
+4. Click **"Save Changes"** at bottom of page
+5. Click **"Install to Workspace"** button
+6. Click **"Allow"** to authorize permissions
+7. **Copy the "Bot User OAuth Token"** (starts with `xoxb-`)
+
+#### Get App-Level Token for Socket Mode
+
+1. In left sidebar, click **"Basic Information"**
+2. Scroll to **"App-Level Tokens"** section
+3. Click **"Generate Token"**
+4. Select permission: `commands:read`
+5. Click **"Review"**, then **"Generate"**
+6. **Copy the App-Level Token** (starts with `xapp-`)
+   - ⚠️ **Important**: You cannot view this token again! Store it securely now.
+
+#### Get Signing Secret
+
+1. Still in **"Basic Information"** section
+2. Scroll to **"App Credentials"** section
+3. Click **"Reveal"** next to **"Signing Secret"**
+4. **Copy the Signing Secret**
+   - ⚠️ You can only reveal this once per session
+
+#### Enable Socket Mode
+
+1. In left sidebar, click **"Enable Socket Mode"**
+2. Toggle the switch to **ON**
+3. Click **"Save Changes"**
+
+### 2. Get Your Slack User ID
 
 The bot will only edit messages from your account. Get your Slack user ID:
 
-```python
+```bash
+# Option 1: Using curl
+curl -s https://slack.com/api/auth.test \
+  -H "Authorization: Bearer YOUR_BOT_TOKEN" | jq .user_id
+
+# Option 2: Using Python
+python3 << 'EOF'
 import requests
-r = requests.get('https://slack.com/api/auth.test', headers={'Authorization': 'Bearer YOUR_BOT_TOKEN'})
-print(r.json()['user_id'])  # e.g., U0123456789
+import json
+
+response = requests.get(
+    'https://slack.com/api/auth.test',
+    headers={'Authorization': 'Bearer YOUR_BOT_TOKEN'}
+)
+data = response.json()
+print(f"Your Slack User ID: {data['user_id']}")
+EOF
+
+# Option 3: From Slack desktop/mobile app
+# Click your profile picture → "View profile" → Copy the User ID shown
 ```
+
+Example output: `U0123456789`
 
 ### 3. Configure Environment
 
-Copy the example `.env`:
+Copy the example `.env` file and fill in your credentials:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your credentials:
+Edit `.env` with these required values:
 
 ```bash
-SLACK_BOT_TOKEN=xoxb-your-bot-token
-SLACK_SIGNING_SECRET=your-signing-secret
-SLACK_APP_TOKEN=xapp-your-app-token
+# Slack credentials (from steps above)
+SLACK_BOT_TOKEN=xoxb-your-bot-token-here
+SLACK_SIGNING_SECRET=your-signing-secret-here
+SLACK_APP_TOKEN=xapp-your-app-level-token-here
+
+# Your Slack user ID (the bot will only edit your messages)
 BOT_USER_ID=U0123456789
-LLM_API_KEY=your-openai-key
+
+# LLM Configuration (can use environment variables or YAML file)
+LLM_API_KEY=your-llm-api-key-here
 LLM_ENDPOINT=https://api.openai.com/v1/chat/completions
 LLM_MODEL=gpt-4o
+LLM_PROVIDER=openai
+
+# Optional: Override default config file path
+# LLM_CONFIG_FILE=config/llm_config.yaml
+
+# Logging (optional)
+WORKSPEAK_LOG_FILE=logs/workSpeak.log
+WORKSPEAK_LOG_LEVEL=INFO
 ```
+
+**Environment Variable Priority**:
+1. Environment variables (highest priority)
+2. YAML config file (default: `config/llm_config.yaml`)
+3. Hardcoded defaults (lowest priority)
 
 ### 4. Install Dependencies
 
