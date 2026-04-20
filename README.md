@@ -1,293 +1,273 @@
-# WorkSpeak Bot
+# WorkSpeak - Professional Message Rewriting
 
-A Slack bot that listens for your messages and automatically rewrites them to be more professional and concise using LLM-powered editing.
+A comprehensive system for automatically rewriting Slack messages to be more professional and concise.
 
-## Features
+## Architecture Overview
 
-- **Automatic message editing**: Detects your messages and rewrites them in real-time
-- **LLM-powered**: Uses OpenAI-compatible models for intelligent rewriting
-- **3-tier quality control**: Combines heuristic checks, semantic embeddings, and iterative refinement
-- **Flexible configuration**: Set up via environment variables or YAML config
-- **Thread context**: Considers conversation context when rewriting
-- **Professional signature**: All edits are clearly marked
+WorkSpeak offers **two complementary approaches** to message rewriting, each suited to different use cases:
 
-## Architecture
+### 1. Slack Bot (Channel-Based)
 
-```
-┌─────────────┐     ┌──────────────────┐     ┌──────────────┐
-│   Slack     │────▶│   Bolt Server    │────▶│  LLM Rewriter│
-│  Socket     │     │   (Event Handler)│     │  + QC Layer  │
-│    Mode     │     └──────────────────┘     └──────────────┘
-└─────────────┘                                  │
-                                                 ▼
-                                          ┌──────────────┐
-                                          │  Edit Message│
-                                          │  in Channel  │
-                                          └──────────────┘
-```
+**Best for**: Channel messages with thread context, cross-device operation
 
-## Setup
+- Listens via Slack Bolt SDK with Socket Mode
+- Rewrites messages **asynchronously** (after sending)
+- Supports full thread context via Slack API
+- Limited to channels where bot is added
+- ✗ Cannot work with 1:1 DMs to other humans (Slack platform limitation)
+- ✅ Works on all devices when bot is in channel
 
-### 1. Create a Slack App
+### 2. Client-Side Agent (Local Interceptor)
 
-1. Visit [Slack API Apps Page](https://api.slack.com/apps)
-2. Click **"Create New App"** → **"From scratch"**
-3. Enter app name (e.g., "Professional Message Bot")
-4. Select your workspace
-5. Click **"Create App"**
+**Best for**: Universal rewriting including 1:1 DMs, preview before sending
 
-#### Configure OAuth & Permissions
+- Monitors Slack desktop app input fields locally
+- Rewrites messages **before sending** (synchronous)
+- Works in any channel without bot installation
+- ✅ Can rewrite 1:1 DMs to other humans (solves Slack API limitation)
+- ✅ Can show preview before sending
+- Limited to single device (your computer)
 
-1. In the left sidebar, click **"OAuth & Permissions"**
-2. Under **"Scopes"** section, click **"Add an OAuth Scope"**
-3. Add these 5 **Bot Token Scopes** (required for message editing):
+**Read more**: [Client-Side Agent Documentation](client_side/README.md)
 
-| Scope | Purpose |
-|-------|---------|
-| `chat:write` | Allows the bot to edit/replace messages |
-| `chat:write.customize` | Enables "edited by bot" signature on updated messages |
-| `im:read` | Reads direct messages |
-| `im:write` | Allows bot to send DMs if needed |
-| `channels:history` | Fetches thread context for smarter rewrites |
+### Feature Comparison
 
-4. Click **"Save Changes"** at bottom of page
-5. Click **"Install to Workspace"** button
-6. Click **"Allow"** to authorize permissions
-7. **Copy the "Bot User OAuth Token"** (starts with `xoxb-`)
+| Feature | Slack Bot | Client-Side Agent |
+|---------|-----------|-------------------|
+| ✅ Works in channels | Yes | Yes |
+| ✅ Works in 1:1 DMs to others | ❌ No | ✅ **Yes** |
+| ✅ Preview before sending | ❌ No | ✅ **Yes** |
+| ✅ Thread context access | Full | Limited |
+| ✅ Cross-device operation | Yes | ❌ One only |
+| ✅ Requires bot installation | Yes | ❌ No |
+| ✅ Latency | 1-2 seconds | <1 second |
 
-#### Get App-Level Token for Socket Mode
+## Architecture Details
 
-1. In left sidebar, click **"Basic Information"**
-2. Scroll to **"App-Level Tokens"** section
-3. Click **"Generate Token"**
-4. Select permission: `commands:read`
-5. Click **"Review"**, then **"Generate"**
-6. **Copy the App-Level Token** (starts with `xapp-`)
-   - ⚠️ **Important**: You cannot view this token again! Store it securely now.
+**Slack Bot** connects to Slack's API platform:
+- Requires Slack App Token + Bot Token
+- Listens via Socket Mode or Events API
+- Can access Slack thread history
+- Subject to Slack's channel privacy model
 
-#### Get Signing Secret
+**Client-Side Agent** runs locally on your computer:
+- NO Slack API connection required
+- Uses OS-level accessibility hooks
+- Monitors your local Slack input field
+- Not subject to platform privacy restrictions
 
-1. Still in **"Basic Information"** section
-2. Scroll to **"App Credentials"** section
-3. Click **"Reveal"** next to **"Signing Secret"**
-4. **Copy the Signing Secret**
-   - ⚠️ You can only reveal this once per session
+## Documentation
 
-#### Enable Socket Mode
+Read the documentation that fits your use case:
 
-1. In left sidebar, click **"Enable Socket Mode"**
-2. Toggle the switch to **ON**
-3. Click **"Save Changes"**
+- **[Main Project Documentation](README.md)** - This overview
+- **[Slack Bot Setup Guide](slack_message_bot/README.md)** - Channel-based approach
+- **[Client-Side Agent Guide](client_side/README.md)** - Local interception approach
+- **[Architecture Design](slack_rewriter_architecture.md)** - Technical system design
+- **[Connection Clarification](client_side/CONNECTION_CLARIFICATION.md)** - How client connects (it doesn't!)
 
-### 2. Get Your Slack User ID
+## Quick Setup
 
-The bot will only edit messages from your account. Get your Slack user ID:
+### Slack Bot (Channel-Based)
 
 ```bash
-# Option 1: Using curl
-curl -s https://slack.com/api/auth.test \
-  -H "Authorization: Bearer YOUR_BOT_TOKEN" | jq .user_id
-
-# Option 2: Using Python
-python3 << 'EOF'
-import requests
-import json
-
-response = requests.get(
-    'https://slack.com/api/auth.test',
-    headers={'Authorization': 'Bearer YOUR_BOT_TOKEN'}
-)
-data = response.json()
-print(f"Your Slack User ID: {data['user_id']}")
-EOF
-
-# Option 3: From Slack desktop/mobile app
-# Click your profile picture → "View profile" → Copy the User ID shown
-```
-
-Example output: `U0123456789`
-
-### 3. Configure Environment
-
-Copy the example `.env` file and fill in your credentials:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with these required values:
-
-```bash
-# Slack credentials (from steps above)
-SLACK_BOT_TOKEN=xoxb-your-bot-token-here
-SLACK_SIGNING_SECRET=your-signing-secret-here
-SLACK_APP_TOKEN=xapp-your-app-level-token-here
-
-# Your Slack user ID (the bot will only edit your messages)
-BOT_USER_ID=U0123456789
-
-# LLM Configuration (can use environment variables or YAML file)
-LLM_API_KEY=your-llm-api-key-here
-LLM_ENDPOINT=https://api.openai.com/v1/chat/completions
-LLM_MODEL=gpt-4o
-LLM_PROVIDER=openai
-
-# Optional: Override default config file path
-# LLM_CONFIG_FILE=config/llm_config.yaml
-
-# Logging (optional)
-WORKSPEAK_LOG_FILE=logs/workSpeak.log
-WORKSPEAK_LOG_LEVEL=INFO
-```
-
-**Environment Variable Priority**:
-1. Environment variables (highest priority)
-2. YAML config file (default: `config/llm_config.yaml`)
-3. Hardcoded defaults (lowest priority)
-
-### 4. Install Dependencies
-
-```bash
-# Create virtual environment (if needed)
-python3 -m venv venv
-source venv/bin/activate
-
-# Install requirements
+# Install bot dependencies
 pip install -r requirements.txt
+
+# Configure LLM
+cp config/llm_config.yaml.example config/llm_config.yaml
+# Edit config/llm_config.yaml with your API key
+
+# Run bot
+python -m slack_message_bot --mode slack
 ```
 
-## Running the Bot
+### Client-Side Agent (Local Interceptor)
 
 ```bash
-# Direct run
-python -m slack_message_bot
+# Install client dependencies
+pip install -r client_side/requirements.txt
 
-# Or with bash
-bash run.sh
+# Create configuration
+python -m client_side --create-config
+
+# Grant permissions (macOS only)
+# System Settings → Privacy → Accessibility → Add Python
+
+# Run client
+python -m client_side
 ```
 
-The bot will:
-1. Connect to Slack via Socket Mode
-2. Listen for messages from your user ID
-3. Fetch thread context if available
-4. Rewrite the message using the LLM
-5. Apply quality control checks
-6. Update the original message with a signature
+## Use Case Recommendations
 
-## Configuration
+### When to use Slack Bot:
 
-### LLM Configuration Priority
+✅ You mainly need channel rewriting  
+✅ You want thread context for better rewrites  
+✅ You need cross-device operation  
+✅ Your workspace allows bot installation  
+✅ You primarily use public/work channels  
 
-1. **Environment variables** (highest priority)
-   ```bash
-   LLM_API_KEY=...
-   LLM_ENDPOINT=https://...
-   LLM_MODEL=gpt-4o
-   LLM_PROVIDER=openai
-   ```
+### When to use Client-Side Agent:
 
-2. **YAML config file**
-   - Default: `config/llm_config.yaml`
-   - Override with: `LLM_CONFIG_FILE=/path/to/config.yaml`
+✅ You need to rewrite 1:1 DMs to other humans  
+✅ You want to see preview before sending  
+✅ You don't want to install bots in channels  
+✅ You mainly use one computer  
+✅ You have macOS/Windows/Linux desktop access  
 
-3. **OpenAI-compatible endpoints**
+### Best of Both Worlds:
 
-The bot works with any OpenAI-compatible endpoint:
+Many users benefit from **both approaches**:
+- Use Slack Bot for channels with thread context
+- Use Client-Side Agent for personal DMs and preview control
 
-```yaml
-# Groq
-endpoint: https://api.groq.com/openai/v1/chat/completions
-model: llama-3.1-70b-versatile
+## Components
 
-# Together AI
-endpoint: https://api.together.xyz/v1/chat/completions
-model: mistralai/Mixtral-8x7B-Instruct-v0.1
+### Slack Bot
+- `slack_message_bot/` - Core bot implementation
+- `slack_message_bot/rewriter.py` - Messages rewriter
+- `slack_message_bot/llm_backend.py` - LLM integration
+- `slack_message_bot/app.py` - Event handler
 
-# vLLM (self-hosted)
-endpoint: https://your-vllm-server/v1/chat/completions
-model: your-locally-served-model
-```
+### Client-Side Agent
+- `client_side/core/` - Message interception, rewriting logic
+- `client_side/integrations/` - Platform hooks and monitors
+- `client_side/interfaces/` - UI components (tray, config dialog)
+- `client_side/config/` - Configuration management
 
 ## Quality Control
 
-The bot uses a multi-tier quality assurance system:
+Both agents implement multi-tier quality assurance:
 
-### Tier 1: Heuristic Checks
-- Metadata removal (token counts, costs, iteration info)
-- Artifact filtering (exploration text, summaries, reasoning)
-- Tone detection (slang, abbreviations)
-- Conciseness ratio (word count comparison)
+1. **Heuristic checks**: Length, professionalism, grammar (fast, no cost)
+2. **Quality scoring**: Confidence-based decision making
+3. **Post-processing**: Removes LLM artifacts and metadata
+4. **Fallback handling**: Graceful degradation on errors
 
-### Tier 2: Semantic Similarity
-- Uses `sentence-transformers` (all-MiniLM-L6-v2)
-- Cosine similarity between original and rewritten
-- Default fallback if embeddings unavailable
+## LLM Configuration
 
-### Tier 3: Iterative Refinement
-- If score is in "grey zone" (0.60-0.85), re-attempt rewrite
-- Maximum 3 iterations
-- Returns best result or original text if no improvement
+Both architectures share the same LLM configuration system:
 
-### Decision Logic
-
-| Score | Action |
-|-------|--------|
-| ≥0.85 | Accept rewrite |
-| 0.60-0.85 | Retry rewrite |
-| <0.60 | Keep original |
-
-## Logging
-
-Logs are written to `logs/workSpeak.log` (configurable via `WORKSPEAK_LOG_FILE`).
-
-Quality decisions are logged:
-```
-2026-04-19 23:45:12 - slack_message_bot.app - INFO - [Quality] Decision: accepted (score: 0.87)
-2026-04-19 23:45:12 - slack_message_bot.app - INFO - [Original] hey guys lol omg meeting is super important
-2026-04-19 23:45:12 - slack_message_bot.app - INFO - [Rewritten] Hello team, confirming an important meeting
+```yaml
+# config/llm_config.yaml (Slack Bot)
+# config/client_config.yaml (Client-Side)
+llm:
+  endpoint: "https://api.openai.com/v1/chat/completions"
+  api_key: "your-api-key"
+  model: "gpt-4o"
+  provider: "openai"
 ```
 
-## Thread Context
-
-When rewriting messages in a thread, the bot fetches up to 5 recent messages in the thread to provide context. This helps maintain conversation coherence.
+Supported providers:
+- OpenAI (default)
+- Anthropic Claude
+- Any OpenAI-compatible endpoint (Groq, Together AI, vLLM, etc.)
 
 ## Testing
 
+### Slack Bot Tests
+
 ```bash
-# Run tests (using existing venv pytest)
-.venv/bin/python -m pytest tests/ -v
+cd tests
+pytest test_llm_backend.py -v
+pytest test_rewriter.py -v
+pytest test_config.py -v
 ```
 
-### Test Coverage
-- `test_config.py`: LLM configuration loading
-- `test_llm_backend.py`: Prompt formatting
-- `test_rewriter.py`: Post-processing, quality checks
-- `test_integration.py`: Integration tests
+### Client-Side Tests
+
+```bash
+cd client_side
+pytest tests/test_client.py -v
+python -m client_side --test
+```
 
 ## Troubleshooting
 
-### Bot doesn't edit my messages
-1. Verify `BOT_USER_ID` is set to your Slack user ID
-2. Check logs: `cat logs/workSpeak.log`
-3. Ensure the app has `chat:write` and `chat:write.customize` scopes
-4. Message must be in a channel or DM where the bot can see it
+### Slack Bot Issues
 
-### LLM errors
-1. Verify `LLM_API_KEY` is valid
-2. Test endpoint manually:
-   ```bash
-   curl -X POST https://api.openai.com/v1/chat/completions \
-        -H "Authorization: Bearer YOUR_KEY" \
-        -H "Content-Type: application/json" \
-        -d '{"model": "gpt-4o", "messages": [{"role": "user", "content": "test"}]}'
-   ```
-3. Check logs for error details
+**"Bot doesn't edit messages"**
+- Verify `BOT_USER_ID` is set correctly
+- Check bot has `chat:write` and `chat:write.customize` scopes
+- Ensure bot is added to the channel
 
-### Message not being edited (stays same)
-- Quality score may be too low (<0.60)
-- Original message may already be professional
-- Try sending a more informal message to test
+**"Slack API errors"**
+- Check `SLACK_BOT_TOKEN` is valid
+- Verify Workspace has bot installed
+- Review logs: `cat logs/workSpeak.log`
+
+### Client-Side Issues
+
+**"Slack not detected"**
+- Make sure Slack desktop app is running
+- Grant accessibility permissions (macOS)
+- Check system logs for platform-specific errors
+
+**"Text not being replaced"**
+- Verify accessibility permissions granted
+- Check keyboard shortcuts aren't conflicting
+- Update `pyautogui` to latest version
 
 ## License
 
-MIT License - feel free to use and modify as needed.
+MIT License
+
+## Contributing
+
+### Development
+
+```bash
+# Setup both components
+git clone <repo-url>
+cd workSpeak
+
+# Slack Bot
+pip install -r requirements.txt
+
+# Client-Side
+cd client_side
+bash quickstart.sh
+cd ..
+
+# Create config files
+python -m client_side --create-config
+```
+
+### Testing
+
+```bash
+# Run all tests
+pytest
+
+# Code coverage
+pytest --cov=. --cov-report=html
+```
+
+## Related Resources
+
+- [Slack API Documentation](https://api.slack.com/)
+- [Slack Bolt SDK](https://slack.dev/bolt-python/)
+- [UI Automation (Windows)](https://github.com/yossiyas/UIAutomation)
+- [Accessibility API (macOS)](https://developer.apple.com/documentation/accessibility)
+- [pyautogui](https://pyautogui.readthedocs.io/)
+
+## Changelog
+
+### Version 2.0.0 (Current)
+- ✅ Added Client-Side Agent with 1:1 DM support
+- ✅ Cross-platform desktop monitoring (Windows, macOS, Linux)
+- ✅ Preview window for user confirmation
+- ✅ Improved quality control system
+- ✅ Better error handling and logging
+
+### Version 1.0.0
+- ✅ Initial Slack Bot implementation
+- ✅ Channel-based message rewriting
+- ✅ Thread context support
+- ✅ Multi-tier quality control
+- ✅ LLM backend abstraction
+
+---
+
+**WorkSpeak** helps you communicate more professionally across all of Slack's features. Choose the approach that fits your workflow, or use both for comprehensive coverage.
