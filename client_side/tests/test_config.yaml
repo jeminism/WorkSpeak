@@ -1,0 +1,15 @@
+# WorkSpeak Client - Test Configuration
+
+test:
+  enabled: true
+
+llm_test:
+  endpoint: "https://api.openai.com/v1/chat/completions"
+  model: "gpt-4o"
+  test_message: "hey guys lol omg meeting is super important"
+  expected_quality_min: 0.7
+
+detector_test:
+  poll_interval: 1.0
+  max_retries: 3
+  timeout_seconds: 5

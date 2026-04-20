@@ -1,0 +1,63 @@
+# WorkSpeak Client Configuration
+
+# This configuration file controls the behavior of the WorkSpeak 
+# client-side agent that rewrites your messages before sending.
+
+# === LLM Configuration (Required) ===
+llm:
+  # Your LLM API endpoint (OpenAI-compatible)
+  endpoint: "https://api.openai.com/v1/chat/completions"
+  
+  # Your API key
+  api_key: "YOUR_API_KEY_HERE"
+  
+  # Model to use
+  model: "gpt-4o"
+  
+  # Provider identifier (for logging)
+  provider: "openai"
+  
+  # Request timeout (seconds)
+  timeout: 30
+
+# === Client Behavior ===
+# Automatically apply rewrites without showing preview
+auto_rewrite: true
+
+# Always show preview window (overrides auto_rewrite for low scores)
+preview_enabled: true
+
+# Keyboard shortcut to trigger manual rewrite
+keyboard_shortcut: "Ctrl+Shift+R"
+
+# === Platform Detection ===
+# Automatically detect and monitor Slack
+detect_slack: true
+
+# Platforms to monitor (desktop, browser, both)
+platforms:
+  - desktop
+  - browser
+
+# === Logging ===
+# Log level (DEBUG, INFO, WARNING, ERROR)
+log_level: INFO
+
+# Log file path
+log_file: "logs/workSpeak_client.log"
+
+# === Quality Control ===
+# Minimum quality score to auto-accept rewrite
+min_quality_score: 0.75
+
+# Show preview for messages below this score
+preview_threshold: 0.85
+
+# === Privacy ===
+# Only rewrite messages from your user ID (recommended)
+# Set to false to rewrite all messages you compose
+rewrite_all: false
+
+# Don't send rewritten messages to LLM if marked as private
+# (Note: This is best-effort - client-side can't verify privacy)
+respect_dm_privacy: true

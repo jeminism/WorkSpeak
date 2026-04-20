@@ -4,3 +4,7 @@ slack_message_bot/__pycache__/
 logs/
 
 config/my_config.yaml
+
+client_side/__pycache__/
+
+client_side/interfaces/__pycache__/
