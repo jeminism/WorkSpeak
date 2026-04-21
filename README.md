@@ -1,4 +1,5 @@
 # WorkSpeak Bot
+![Version badge](https://img.shields.io/badge/Version-0.0.0-green.svg)
 
 A Slack bot that listens for your messages and automatically rewrites them to be more professional and concise using LLM-powered editing.
 
@@ -202,6 +203,8 @@ python -m slack_message_bot --mode cli
 # Run a batch evaluation of messages defined in a txt file then terminates. Accepts broad formatting for messages in the file - refer to sample_messages.txt as an example
 python -m slack_message_bot --mode batch --input sample_messages.txt
 ```
+
+See `EVALUATION_GUIDE.md` for more details
 
 ## Configuration
 
