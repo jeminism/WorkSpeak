@@ -1,0 +1,37 @@
+# Sample messages for WorkSpeak evaluation
+
+## Plain Text Format
+
+This line is an informal message with lol in it.
+Hey guys, this meeting is super important omg
+Can we maybe potentially reschedule the call?
+I idk think we should do this differently tbh
+omg this is so frustrating wtf
+
+## JSON Format
+
+{
+  "messages": [
+    "Hey team, just wanted to flag that the meeting is moved to 3pm tomorrow",
+    "lol omg can someone please explain this?",
+    "I was just wondering if maybe we could potentially consider rescheduling the call",
+    "plz help me with this asap",
+    "FYI the presentation deck is ready for review"
+  ]
+}
+
+## CSV Format
+
+Hey guys this is a casual message
+This is more formal and professional already
+omg lol this is so frustrating tbh
+WTF is going on here idk
+Can we please discuss this in the next meeting?
+
+## YAML Format
+
+- Hey this meeting moved to 3pm
+- lol omg so important
+- I was just wondering if maybe we could potentially reschedule
+- plz need help asap
+- Thanks in advance for looking into this

@@ -1,0 +1,22 @@
+i want to create a bot for slack which will do the following: 1. listen for 
+events corresponding to me publishing messages to channels. 2. rewrite my 
+original text to make it more professional and friendly. The re-written text 
+should be concise (no long prose and circular statements) while retaining the 
+original semantic meaning and implications. 3. edit the original message with 
+the new re-written text. edited messages should be signed off 'edited by 
+xxx-bot' or something similar.
+
+architecture wise, i expect the app to function as a server which listens for 
+slack events via slacks app socket api. the event will serve as the trigger. 
+upon triggering, the server should pull thread history as additional context via
+api, followed by the actual re-writing step. i imagine the re-writes to be 
+performed by an LLM, so the rewriting context and original text should be 
+formatted into a prompt which is sent to the designed openai endpoint. the user 
+shuold be free to designate any endpoint and key as any one of environment 
+variable / yaml config / server launch input argument. Finally, there should be 
+a post-processing step which checks for semantic similarity, tonal suitability, 
+and conciseness of the re-written text. upon metric quality failure, there 
+should be fallbacks to further refine the re-writes or do nothing to modify the 
+text and log a silent error instead. Note that NOT doing any modificaiton is 
+also a valid option if the original text already meets tonal and semantic 
+requirements.
