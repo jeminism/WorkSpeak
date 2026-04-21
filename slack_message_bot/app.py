@@ -59,7 +59,7 @@ class SlackMessageBot:
                             "type": "mrkdwn",
                             # Emoji + small markdown; rendered in the same style Slack uses
                             # for its own "(edited)" label.
-                            "text": ":robot_face: *Edited by WorkSpeak*"
+                            "text": ":robot_face: Edited by WorkSpeak <https://github.com/jeminism/WorkSpeak|*>"
                         }
                     ]
                 }
