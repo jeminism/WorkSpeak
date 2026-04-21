@@ -1,6 +1,19 @@
 
-slack_message_bot/__pycache__/
+*/*/__pycache__/
+*/__pycache__/
 
 logs/
 
 config/my_config.yaml
+
+config/llm_config.yaml
+
+.hermes/
+
+.claude/
+
+.venv/
+
+.env/
+
+.pytest_cache/
