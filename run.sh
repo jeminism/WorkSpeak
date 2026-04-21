@@ -16,4 +16,4 @@ fi
 mkdir -p logs
 
 # Run bot
-python -m slack_message_bot "$@"
+python3 -m slack_message_bot "$@"

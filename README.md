@@ -36,24 +36,26 @@ A Slack bot that listens for your messages and automatically rewrites them to be
 4. Select your workspace
 5. Click **"Create App"**
 
-#### Configure OAuth & Permissions
+#### Enable Socket Mode
 
-1. In the left sidebar, click **"OAuth & Permissions"**
-2. Under **"Scopes"** section, click **"Add an OAuth Scope"**
-3. Add these 5 **Bot Token Scopes** (required for message editing):
+1. In left sidebar, click **"Enable Socket Mode"**
+2. Toggle the switch to **ON**
+3. Click **"Save Changes"**
 
-| Scope | Purpose |
+
+#### Enable Event Subscription
+
+1. In left sidebar, click **"Event Subscriptions"**
+2. Toggle the switch to **ON**
+3. Navigate to **"Subscrube to events on behalf of users"**
+4. Add these 4 **Workspace Events** : 
+
+| Event | Purpose |
 |-------|---------|
-| `chat:write` | Allows the bot to edit/replace messages |
-| `chat:write.customize` | Enables "edited by bot" signature on updated messages |
-| `im:read` | Reads direct messages |
-| `im:write` | Allows bot to send DMs if needed |
-| `channels:history` | Fetches thread context for smarter rewrites |
-
-4. Click **"Save Changes"** at bottom of page
-5. Click **"Install to Workspace"** button
-6. Click **"Allow"** to authorize permissions
-7. **Copy the "Bot User OAuth Token"** (starts with `xoxb-`)
+| `message.channels` | Receive event of new messages in channels |
+| `message.groups` | Receive event of new messages in groups |
+| `message.im` | Receive event of new messages in direct messages |
+| `message.mpim` | Receive event of new messages in multi-member direct messages |
 
 #### Get App-Level Token for Socket Mode
 
@@ -73,11 +75,28 @@ A Slack bot that listens for your messages and automatically rewrites them to be
 4. **Copy the Signing Secret**
    - ⚠️ You can only reveal this once per session
 
-#### Enable Socket Mode
+5. Click **"Save Changes"**
 
-1. In left sidebar, click **"Enable Socket Mode"**
-2. Toggle the switch to **ON**
-3. Click **"Save Changes"**
+
+#### Configure OAuth & Permissions
+
+1. In the left sidebar, click **"OAuth & Permissions"**
+2. Under **"Scopes"** section, click **"Add an OAuth Scope"**
+3. Add these 5 **User Token Scopes** (required for message read & editing):
+
+| Scope | Purpose |
+|-------|---------|
+| `chat:write` | Allows the bot to edit/replace messages |
+| `channels:history` | Read messages sent to public channels |
+| `groups:history` | Read messages sent to users' private channels |
+| `im:history` | Read messages sent to direct messages |
+| `mpim:history` | Read messages sent to multi-member direct messages |
+
+4. Click **"Save Changes"** at bottom of page
+5. Click **"Install to Workspace"** button
+6. Click **"Allow"** to authorize permissions
+7. **Copy the "User OAuth Token"** (starts with `xoxp-`)
+
 
 ### 2. Get Your Slack User ID
 
@@ -173,6 +192,16 @@ The bot will:
 4. Rewrite the message using the LLM
 5. Apply quality control checks
 6. Update the original message with a signature
+
+### Alternative Operating Modes
+
+```bash
+# CLI chat-like interface. NO Slack integration - translation only. Good for quick custom messages for evaluation
+python -m slack_message_bot --mode cli
+
+# Run a batch evaluation of messages defined in a txt file then terminates. Accepts broad formatting for messages in the file - refer to sample_messages.txt as an example
+python -m slack_message_bot --mode batch --input sample_messages.txt
+```
 
 ## Configuration
 
