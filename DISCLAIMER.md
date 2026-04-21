@@ -2,7 +2,7 @@
 
 **Version 1.0 – 2026‑04‑21**  
 
-*This disclaimer (“Disclaimer”) applies to the software package **[PROJECT NAME]** (the “Software”) and any related documentation, scripts, or services provided by the author(s) (“we”, “us”, “our”). By downloading, installing, or using the Software, you (“User”, “you”, “your”) acknowledge and agree to the following terms.*
+*This disclaimer (“Disclaimer”) applies to the software package **WorkSpeak** (the “Software”) and any related documentation, scripts, or services provided by the author(s) (“we”, “us”, “our”). By downloading, installing, or using the Software, you (“User”, “you”, “your”) acknowledge and agree to the following terms.*
 
 ---
 
