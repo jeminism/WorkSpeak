@@ -31,10 +31,50 @@ class SlackMessageBot:
     
     def _setup_handlers(self):
         """Set up Bolt event handlers."""
-        
+        bot_user_id = os.getenv("BOT_USER_ID")
+        if not bot_user_id:
+            raise ValueError("BOT_USER_ID environment variable not set")
+
+        def build_message_blocks(main_text: str):
+            """
+            Returns a list of Block‑Kit dictionaries:
+              • a `section` block for the main message body
+              • a `context` block that works like the "(edited)" tag
+            """
+            return [
+                # ---- Main content ----------------------------------------------------
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        # You can keep any mrkdwn you like (bold, links, lists, …)
+                        "text": main_text
+                    }
+                },
+                # ---- Watermark / bot‑edited line ------------------------------------
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            # Emoji + small markdown; rendered in the same style Slack uses
+                            # for its own "(edited)" label.
+                            "text": ":robot_face: *Edited by WorkSpeak*"
+                        }
+                    ]
+                }
+            ]
+
+                
         # Listen for message events
         @self.app.event("message")
         def handle_message(event, say, client):
+            user_id = event.get("user")
+            if bot_user_id and user_id != bot_user_id:
+                # Not our message, skip
+                return
+
+            print(f"{event}")
             try:
                 # Skip if it's a bot message or message edit
                 if event.get("subtype") not in [None, "bot_message_thread"]:
@@ -44,19 +84,14 @@ class SlackMessageBot:
                 # For now, we process all messages from the authenticated user
                 # You should set BOT_USER_ID environment variable to your user ID
                 
-                bot_user_id = os.getenv("BOT_USER_ID")
-                user_id = event.get("user")
                 
-                if bot_user_id and user_id != bot_user_id:
-                    # Not our message, skip
-                    return
                 
                 # Fetch thread context if available
                 thread_ts = event.get("thread_ts") or event.get("ts")
                 thread_context = self._fetch_thread_context(event["channel"], thread_ts)
                 
                 # Get original text
-                original_text = event["message"]["text"]
+                original_text = event["text"]
                 if not original_text:
                     return
                 
@@ -73,11 +108,11 @@ class SlackMessageBot:
                 # Edit the message if rewritten differently
                 if rewritten != original_text:
                     try:
-                        updated_text = f"{rewritten}\n\n--- edited by WorkSpeak Bot"
+                        # updated_text = f"{rewritten}\n\n--- edited by WorkSpeak Bot"
                         client.chat_update(
                             channel=event["channel"],
                             ts=event["ts"],
-                            text=updated_text
+                            blocks=build_message_blocks(rewritten)
                         )
                         logger.info(f"Successfully edited message ts={event['ts']}")
                     except Exception as edit_error:
