@@ -1,5 +1,7 @@
 # WorkSpeak Bot
 ![Version badge](https://img.shields.io/badge/Version-0.0.0-green.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+[![Disclaimer](https://img.shields.io/badge/Disclaimer-Required-red.svg)](DISCLAIMER.md)
 
 A Slack bot that listens for your messages and automatically rewrites them to be more professional and concise using LLM-powered editing.
 
@@ -320,6 +322,8 @@ When rewriting messages in a thread, the bot fetches up to 5 recent messages in 
 - Original message may already be professional
 - Try sending a more informal message to test
 
-## License
+## Disclaimer
+⚠️ Please read `DISCLAIMER.md` before using this tool
 
+## License
 MIT License - feel free to use and modify as needed.
