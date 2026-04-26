@@ -1,0 +1,19 @@
+# WorkSpeak Core Requirements
+# For both CDP overlay and Slack bot
+
+# LLM backend
+aiohttp>=3.9.0
+
+# Text processing and embeddings
+sentence-transformers>=2.3.0
+numpy>=1.26.0
+
+# Configuration
+pyyaml>=6.0.1
+python-dotenv>=1.0.0
+
+# Development
+pytest>=7.4.0
+
+# Optional: For CLI interface
+prompt-toolkit>=3.0.0

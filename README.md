@@ -3,7 +3,46 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![Disclaimer](https://img.shields.io/badge/Disclaimer-Required-red.svg)](DISCLAIMER.md)
 
-A Slack bot that listens for your messages and automatically rewrites them to be more professional and concise using LLM-powered editing.
+A multi-platform messaging enhancement suite that provides automatic message rewriting using LLM-powered editing. Features two complementary interfaces:
+
+1. **Slack Bot**: Multi-device, team-wide functionality via standard Slack API
+2. **CDP Overlay**: Real-time, in-place rewriting for Linux desktop with no "edited" badge
+
+## Quick Start
+
+### Option A: Slack Bot (Recommended for most users)
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure (see README below for detailed setup)
+cp .env.example .env
+# Edit .env with Slack and LLM credentials
+
+# Start the bot
+python -m slack_message_bot
+```
+
+### Option B: CDP Overlay (Linux desktop, no "edited" badge)
+
+```bash
+# Install overlay dependencies
+pip install -r requirements-overlay.txt
+
+# Generate Slack wrapper script
+python -m overlay.main --wrapper
+
+# Launch Slack with CDP
+slack-cdp  # or: slack --inspect=9229
+
+# Start overlay in new terminal
+python -m overlay.main
+```
+
+See individual READMEs for detailed setup:
+- [Slack Bot](#setup-slack-bot) - Full documentation below
+- [CDP Overlay](overlay/README.md) - Linux desktop real-time rewriting
 
 ## Features
 
@@ -321,6 +360,35 @@ When rewriting messages in a thread, the bot fetches up to 5 recent messages in 
 - Quality score may be too low (<0.60)
 - Original message may already be professional
 - Try sending a more informal message to test
+
+## Two Approaches Compared
+
+| Feature | Slack Bot | CDP Overlay |
+|---------|-----------|-------------|
+| **No "edited" badge** | ❌ Shows (edited) | ✅ No badge |
+| **Real-time preview** | ❌ After-send edit | ✅ As-you-type |
+| **Multi-platform** | ✅ All Slack clients | ❌ Linux desktop only |
+| **Team deployment** | ✅ Yes | ❌ Individual use |
+| **Slack permissions** | OAuth (channels:read, chat:write) | None (CDP only) |
+| **Setup complexity** | OAuth install | Manual (wrapper script) |
+| **Latency** | 2-5 seconds | <1 second |
+| **Privacy** | Server processes messages | All local |
+
+### When to Use Each
+
+**Use Slack Bot when:**
+- You need multi-device support
+- You're deploying for a team
+- You want minimal setup (OAuth install)
+- You don't mind the "(edited)" badge
+
+**Use CDP Overlay when:**
+- You're on Linux desktop only
+- You want seamless, invisible rewriting
+- You prefer keyboard shortcuts over Slack UI
+- You want minimal latency
+
+See [overlay/README.md](overlay/README.md) for CDP Overlay setup.
 
 ## Disclaimer
 ⚠️ Please read `DISCLAIMER.md` before using this tool
